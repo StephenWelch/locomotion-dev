@@ -1,0 +1,973 @@
+wandb_version: 1
+
+_wandb:
+  desc: null
+  value:
+    cli_version: 0.12.21
+    framework: torch
+    is_jupyter_run: false
+    is_kaggle_kernel: false
+    python_version: 3.10.14
+    start_time: 1725333849
+    t:
+      1:
+      - 1
+      - 55
+      3:
+      - 3
+      - 17
+      4: 3.10.14
+      5: 0.12.21
+      8:
+      - 3
+      - 5
+alg_cfg:
+  desc: null
+  value:
+    clip_param: 0.2
+    desired_kl: 0.01
+    entropy_coef: 0.008
+    gamma: 0.99
+    lam: 0.95
+    learning_rate: 0.001
+    max_grad_norm: 1.0
+    num_learning_epochs: 5
+    num_mini_batches: 4
+    schedule: adaptive
+    use_clipped_value_loss: true
+    value_loss_coef: 1.0
+env_cfg:
+  desc: null
+  value:
+    actions:
+      joint_pos:
+        asset_name: robot
+        class_type: omni.isaac.lab.envs.mdp.actions.joint_actions.JointPositionAction
+        debug_vis: false
+        joint_names:
+        - .*
+        offset: 0.0
+        preserve_order: false
+        scale: 0.5
+        use_default_offset: true
+    commands:
+      base_velocity:
+        asset_name: robot
+        class_type: omni.isaac.lab.envs.mdp.commands.velocity_command.UniformVelocityCommand
+        debug_vis: true
+        heading_command: true
+        heading_control_stiffness: 0.5
+        ranges:
+          ang_vel_z:
+          - -1.0
+          - 1.0
+          heading:
+          - -3.141592653589793
+          - 3.141592653589793
+          lin_vel_x:
+          - 0.0
+          - 1.0
+          lin_vel_y:
+          - -0.5
+          - 0.5
+        rel_heading_envs: 1.0
+        rel_standing_envs: 0.02
+        resampling_time_range:
+        - 10.0
+        - 10.0
+    curriculum:
+      terrain_levels: null
+    decimation: 4
+    episode_length_s: 20.0
+    events:
+      add_base_mass: null
+      base_external_force_torque:
+        func: omni.isaac.lab.envs.mdp.events.apply_external_force_torque
+        interval_range_s: null
+        is_global_time: false
+        min_step_count_between_reset: 0
+        mode: reset
+        params:
+          asset_cfg:
+            body_ids:
+              slice_start: null
+              slice_step: null
+              slice_stop: null
+            body_names:
+            - torso_link
+            fixed_tendon_ids:
+              slice_start: null
+              slice_step: null
+              slice_stop: null
+            fixed_tendon_names: null
+            joint_ids:
+              slice_start: null
+              slice_step: null
+              slice_stop: null
+            joint_names: null
+            name: robot
+            preserve_order: false
+          force_range:
+          - 0.0
+          - 0.0
+          torque_range:
+          - -0.0
+          - 0.0
+      physics_material:
+        func: omni.isaac.lab.envs.mdp.events.randomize_rigid_body_material
+        interval_range_s: null
+        is_global_time: false
+        min_step_count_between_reset: 0
+        mode: startup
+        params:
+          asset_cfg:
+            body_ids:
+              slice_start: null
+              slice_step: null
+              slice_stop: null
+            body_names: .*
+            fixed_tendon_ids:
+              slice_start: null
+              slice_step: null
+              slice_stop: null
+            fixed_tendon_names: null
+            joint_ids:
+              slice_start: null
+              slice_step: null
+              slice_stop: null
+            joint_names: null
+            name: robot
+            preserve_order: false
+          dynamic_friction_range:
+          - 0.6
+          - 0.6
+          num_buckets: 64
+          restitution_range:
+          - 0.0
+          - 0.0
+          static_friction_range:
+          - 0.8
+          - 0.8
+      push_robot: null
+      reset_base:
+        func: omni.isaac.lab.envs.mdp.events.reset_root_state_uniform
+        interval_range_s: null
+        is_global_time: false
+        min_step_count_between_reset: 0
+        mode: reset
+        params:
+          pose_range:
+            x:
+            - -0.5
+            - 0.5
+            y:
+            - -0.5
+            - 0.5
+            yaw:
+            - -3.14
+            - 3.14
+          velocity_range:
+            pitch:
+            - 0.0
+            - 0.0
+            roll:
+            - 0.0
+            - 0.0
+            x:
+            - 0.0
+            - 0.0
+            y:
+            - 0.0
+            - 0.0
+            yaw:
+            - 0.0
+            - 0.0
+            z:
+            - 0.0
+            - 0.0
+      reset_robot_joints:
+        func: omni.isaac.lab.envs.mdp.events.reset_joints_by_scale
+        interval_range_s: null
+        is_global_time: false
+        min_step_count_between_reset: 0
+        mode: reset
+        params:
+          position_range:
+          - 1.0
+          - 1.0
+          velocity_range:
+          - 0.0
+          - 0.0
+    is_finite_horizon: false
+    observations:
+      policy:
+        actions:
+          clip: null
+          func: omni.isaac.lab.envs.mdp.observations.last_action
+          modifiers: null
+          noise: null
+          params: {}
+          scale: null
+        base_ang_vel:
+          clip: null
+          func: omni.isaac.lab.envs.mdp.observations.base_ang_vel
+          modifiers: null
+          noise:
+            func: omni.isaac.lab.utils.noise.noise_model.uniform_noise
+            n_max: 0.2
+            n_min: -0.2
+            operation: add
+          params: {}
+          scale: null
+        base_lin_vel:
+          clip: null
+          func: omni.isaac.lab.envs.mdp.observations.base_lin_vel
+          modifiers: null
+          noise:
+            func: omni.isaac.lab.utils.noise.noise_model.uniform_noise
+            n_max: 0.1
+            n_min: -0.1
+            operation: add
+          params: {}
+          scale: null
+        concatenate_terms: true
+        enable_corruption: true
+        height_scan: null
+        joint_pos:
+          clip: null
+          func: omni.isaac.lab.envs.mdp.observations.joint_pos_rel
+          modifiers: null
+          noise:
+            func: omni.isaac.lab.utils.noise.noise_model.uniform_noise
+            n_max: 0.01
+            n_min: -0.01
+            operation: add
+          params: {}
+          scale: null
+        joint_vel:
+          clip: null
+          func: omni.isaac.lab.envs.mdp.observations.joint_vel_rel
+          modifiers: null
+          noise:
+            func: omni.isaac.lab.utils.noise.noise_model.uniform_noise
+            n_max: 1.5
+            n_min: -1.5
+            operation: add
+          params: {}
+          scale: null
+        projected_gravity:
+          clip: null
+          func: omni.isaac.lab.envs.mdp.observations.projected_gravity
+          modifiers: null
+          noise:
+            func: omni.isaac.lab.utils.noise.noise_model.uniform_noise
+            n_max: 0.05
+            n_min: -0.05
+            operation: add
+          params: {}
+          scale: null
+        velocity_commands:
+          clip: null
+          func: omni.isaac.lab.envs.mdp.observations.generated_commands
+          modifiers: null
+          noise: null
+          params:
+            command_name: base_velocity
+          scale: null
+    rewards:
+      action_rate_l2:
+        func: omni.isaac.lab.envs.mdp.rewards.action_rate_l2
+        params: {}
+        weight: -0.005
+      ang_vel_xy_l2:
+        func: omni.isaac.lab.envs.mdp.rewards.ang_vel_xy_l2
+        params: {}
+        weight: -0.05
+      dof_acc_l2:
+        func: omni.isaac.lab.envs.mdp.rewards.joint_acc_l2
+        params:
+          asset_cfg:
+            body_ids:
+              slice_start: null
+              slice_step: null
+              slice_stop: null
+            body_names: null
+            fixed_tendon_ids:
+              slice_start: null
+              slice_step: null
+              slice_stop: null
+            fixed_tendon_names: null
+            joint_ids:
+              slice_start: null
+              slice_step: null
+              slice_stop: null
+            joint_names:
+            - .*_hip_.*
+            - .*_knee_joint
+            name: robot
+            preserve_order: false
+        weight: -1.0e-07
+      dof_pos_limits:
+        func: omni.isaac.lab.envs.mdp.rewards.joint_pos_limits
+        params:
+          asset_cfg:
+            body_ids:
+              slice_start: null
+              slice_step: null
+              slice_stop: null
+            body_names: null
+            fixed_tendon_ids:
+              slice_start: null
+              slice_step: null
+              slice_stop: null
+            fixed_tendon_names: null
+            joint_ids:
+              slice_start: null
+              slice_step: null
+              slice_stop: null
+            joint_names:
+            - .*_ankle_pitch_joint
+            - .*_ankle_roll_joint
+            name: robot
+            preserve_order: false
+        weight: -1.0
+      dof_torques_l2:
+        func: omni.isaac.lab.envs.mdp.rewards.joint_torques_l2
+        params:
+          asset_cfg:
+            body_ids:
+              slice_start: null
+              slice_step: null
+              slice_stop: null
+            body_names: null
+            fixed_tendon_ids:
+              slice_start: null
+              slice_step: null
+              slice_stop: null
+            fixed_tendon_names: null
+            joint_ids:
+              slice_start: null
+              slice_step: null
+              slice_stop: null
+            joint_names:
+            - .*_hip_.*
+            - .*_knee_joint
+            name: robot
+            preserve_order: false
+        weight: -2.0e-06
+      feet_air_time:
+        func: omni.isaac.lab_tasks.manager_based.locomotion.velocity.mdp.rewards.feet_air_time_positive_biped
+        params:
+          command_name: base_velocity
+          sensor_cfg:
+            body_ids:
+              slice_start: null
+              slice_step: null
+              slice_stop: null
+            body_names: .*_ankle_roll_link
+            fixed_tendon_ids:
+              slice_start: null
+              slice_step: null
+              slice_stop: null
+            fixed_tendon_names: null
+            joint_ids:
+              slice_start: null
+              slice_step: null
+              slice_stop: null
+            joint_names: null
+            name: contact_forces
+            preserve_order: false
+          threshold: 0.4
+        weight: 0.75
+      feet_slide:
+        func: omni.isaac.lab_tasks.manager_based.locomotion.velocity.mdp.rewards.feet_slide
+        params:
+          asset_cfg:
+            body_ids:
+              slice_start: null
+              slice_step: null
+              slice_stop: null
+            body_names: .*_ankle_roll_link
+            fixed_tendon_ids:
+              slice_start: null
+              slice_step: null
+              slice_stop: null
+            fixed_tendon_names: null
+            joint_ids:
+              slice_start: null
+              slice_step: null
+              slice_stop: null
+            joint_names: null
+            name: robot
+            preserve_order: false
+          sensor_cfg:
+            body_ids:
+              slice_start: null
+              slice_step: null
+              slice_stop: null
+            body_names: .*_ankle_roll_link
+            fixed_tendon_ids:
+              slice_start: null
+              slice_step: null
+              slice_stop: null
+            fixed_tendon_names: null
+            joint_ids:
+              slice_start: null
+              slice_step: null
+              slice_stop: null
+            joint_names: null
+            name: contact_forces
+            preserve_order: false
+        weight: -0.1
+      flat_orientation_l2:
+        func: omni.isaac.lab.envs.mdp.rewards.flat_orientation_l2
+        params: {}
+        weight: -1.0
+      joint_deviation_arms:
+        func: omni.isaac.lab.envs.mdp.rewards.joint_deviation_l1
+        params:
+          asset_cfg:
+            body_ids:
+              slice_start: null
+              slice_step: null
+              slice_stop: null
+            body_names: null
+            fixed_tendon_ids:
+              slice_start: null
+              slice_step: null
+              slice_stop: null
+            fixed_tendon_names: null
+            joint_ids:
+              slice_start: null
+              slice_step: null
+              slice_stop: null
+            joint_names:
+            - .*_shoulder_pitch_joint
+            - .*_shoulder_roll_joint
+            - .*_shoulder_yaw_joint
+            - .*_elbow_pitch_joint
+            - .*_elbow_roll_joint
+            name: robot
+            preserve_order: false
+        weight: -0.1
+      joint_deviation_fingers:
+        func: omni.isaac.lab.envs.mdp.rewards.joint_deviation_l1
+        params:
+          asset_cfg:
+            body_ids:
+              slice_start: null
+              slice_step: null
+              slice_stop: null
+            body_names: null
+            fixed_tendon_ids:
+              slice_start: null
+              slice_step: null
+              slice_stop: null
+            fixed_tendon_names: null
+            joint_ids:
+              slice_start: null
+              slice_step: null
+              slice_stop: null
+            joint_names:
+            - .*_five_joint
+            - .*_three_joint
+            - .*_six_joint
+            - .*_four_joint
+            - .*_zero_joint
+            - .*_one_joint
+            - .*_two_joint
+            name: robot
+            preserve_order: false
+        weight: -0.05
+      joint_deviation_hip:
+        func: omni.isaac.lab.envs.mdp.rewards.joint_deviation_l1
+        params:
+          asset_cfg:
+            body_ids:
+              slice_start: null
+              slice_step: null
+              slice_stop: null
+            body_names: null
+            fixed_tendon_ids:
+              slice_start: null
+              slice_step: null
+              slice_stop: null
+            fixed_tendon_names: null
+            joint_ids:
+              slice_start: null
+              slice_step: null
+              slice_stop: null
+            joint_names:
+            - .*_hip_yaw_joint
+            - .*_hip_roll_joint
+            name: robot
+            preserve_order: false
+        weight: -0.1
+      joint_deviation_torso:
+        func: omni.isaac.lab.envs.mdp.rewards.joint_deviation_l1
+        params:
+          asset_cfg:
+            body_ids:
+              slice_start: null
+              slice_step: null
+              slice_stop: null
+            body_names: null
+            fixed_tendon_ids:
+              slice_start: null
+              slice_step: null
+              slice_stop: null
+            fixed_tendon_names: null
+            joint_ids:
+              slice_start: null
+              slice_step: null
+              slice_stop: null
+            joint_names: torso_joint
+            name: robot
+            preserve_order: false
+        weight: -0.1
+      lin_vel_z_l2:
+        func: omni.isaac.lab.envs.mdp.rewards.lin_vel_z_l2
+        params: {}
+        weight: -0.2
+      termination_penalty:
+        func: omni.isaac.lab.envs.mdp.rewards.is_terminated
+        params: {}
+        weight: -200.0
+      track_ang_vel_z_exp:
+        func: omni.isaac.lab_tasks.manager_based.locomotion.velocity.mdp.rewards.track_ang_vel_z_world_exp
+        params:
+          command_name: base_velocity
+          std: 0.5
+        weight: 1.0
+      track_lin_vel_xy_exp:
+        func: omni.isaac.lab_tasks.manager_based.locomotion.velocity.mdp.rewards.track_lin_vel_xy_yaw_frame_exp
+        params:
+          command_name: base_velocity
+          std: 0.5
+        weight: 1.0
+      undesired_contacts: null
+    scene:
+      contact_forces:
+        class_type: omni.isaac.lab.sensors.contact_sensor.contact_sensor.ContactSensor
+        debug_vis: false
+        filter_prim_paths_expr: []
+        force_threshold: 1.0
+        history_length: 3
+        prim_path: /World/envs/env_.*/Robot/.*
+        track_air_time: true
+        track_pose: false
+        update_period: 0.005
+        visualizer_cfg:
+          markers:
+            contact:
+              activate_contact_sensors: false
+              collision_props: null
+              copy_from_source: true
+              func: omni.isaac.lab.sim.spawners.shapes.shapes.spawn_sphere
+              mass_props: null
+              physics_material: null
+              physics_material_path: material
+              radius: 0.02
+              rigid_props: null
+              semantic_tags: null
+              visible: true
+              visual_material:
+                diffuse_color:
+                - 1.0
+                - 0.0
+                - 0.0
+                emissive_color:
+                - 0.0
+                - 0.0
+                - 0.0
+                func: omni.isaac.lab.sim.spawners.materials.visual_materials.spawn_preview_surface
+                metallic: 0.0
+                opacity: 1.0
+                roughness: 0.5
+              visual_material_path: material
+            no_contact:
+              activate_contact_sensors: false
+              collision_props: null
+              copy_from_source: true
+              func: omni.isaac.lab.sim.spawners.shapes.shapes.spawn_sphere
+              mass_props: null
+              physics_material: null
+              physics_material_path: material
+              radius: 0.02
+              rigid_props: null
+              semantic_tags: null
+              visible: false
+              visual_material:
+                diffuse_color:
+                - 0.0
+                - 1.0
+                - 0.0
+                emissive_color:
+                - 0.0
+                - 0.0
+                - 0.0
+                func: omni.isaac.lab.sim.spawners.materials.visual_materials.spawn_preview_surface
+                metallic: 0.0
+                opacity: 1.0
+                roughness: 0.5
+              visual_material_path: material
+          prim_path: /Visuals/ContactSensor
+      env_spacing: 2.5
+      height_scanner: null
+      lazy_sensor_update: true
+      num_envs: 4096
+      replicate_physics: true
+      robot:
+        actuators:
+          arms:
+            armature:
+              .*_elbow_.*: 0.01
+              .*_five_joint: 0.001
+              .*_four_joint: 0.001
+              .*_one_joint: 0.001
+              .*_shoulder_.*: 0.01
+              .*_six_joint: 0.001
+              .*_three_joint: 0.001
+              .*_two_joint: 0.001
+              .*_zero_joint: 0.001
+            class_type: omni.isaac.lab.actuators.actuator_pd.ImplicitActuator
+            damping: 10.0
+            effort_limit: 300
+            friction: null
+            joint_names_expr:
+            - .*_shoulder_pitch_joint
+            - .*_shoulder_roll_joint
+            - .*_shoulder_yaw_joint
+            - .*_elbow_pitch_joint
+            - .*_elbow_roll_joint
+            - .*_five_joint
+            - .*_three_joint
+            - .*_six_joint
+            - .*_four_joint
+            - .*_zero_joint
+            - .*_one_joint
+            - .*_two_joint
+            stiffness: 40.0
+            velocity_limit: 100.0
+          feet:
+            armature: 0.01
+            class_type: omni.isaac.lab.actuators.actuator_pd.ImplicitActuator
+            damping: 2.0
+            effort_limit: 20
+            friction: null
+            joint_names_expr:
+            - .*_ankle_pitch_joint
+            - .*_ankle_roll_joint
+            stiffness: 20.0
+            velocity_limit: null
+          legs:
+            armature:
+              .*_hip_.*: 0.01
+              .*_knee_joint: 0.01
+              torso_joint: 0.01
+            class_type: omni.isaac.lab.actuators.actuator_pd.ImplicitActuator
+            damping:
+              .*_hip_pitch_joint: 5.0
+              .*_hip_roll_joint: 5.0
+              .*_hip_yaw_joint: 5.0
+              .*_knee_joint: 5.0
+              torso_joint: 5.0
+            effort_limit: 300
+            friction: null
+            joint_names_expr:
+            - .*_hip_yaw_joint
+            - .*_hip_roll_joint
+            - .*_hip_pitch_joint
+            - .*_knee_joint
+            - torso_joint
+            stiffness:
+              .*_hip_pitch_joint: 200.0
+              .*_hip_roll_joint: 150.0
+              .*_hip_yaw_joint: 150.0
+              .*_knee_joint: 200.0
+              torso_joint: 200.0
+            velocity_limit: 100.0
+        class_type: omni.isaac.lab.assets.articulation.articulation.Articulation
+        collision_group: 0
+        debug_vis: false
+        init_state:
+          ang_vel:
+          - 0.0
+          - 0.0
+          - 0.0
+          joint_pos:
+            .*_ankle_pitch_joint: -0.23
+            .*_elbow_pitch_joint: 0.87
+            .*_hip_pitch_joint: -0.2
+            .*_knee_joint: 0.42
+            left_one_joint: 1.0
+            left_shoulder_pitch_joint: 0.35
+            left_shoulder_roll_joint: 0.16
+            left_two_joint: 0.52
+            right_one_joint: -1.0
+            right_shoulder_pitch_joint: 0.35
+            right_shoulder_roll_joint: -0.16
+            right_two_joint: -0.52
+          joint_vel:
+            .*: 0.0
+          lin_vel:
+          - 0.0
+          - 0.0
+          - 0.0
+          pos:
+          - 0.0
+          - 0.0
+          - 0.74
+          rot:
+          - 1.0
+          - 0.0
+          - 0.0
+          - 0.0
+        prim_path: /World/envs/env_.*/Robot
+        soft_joint_pos_limit_factor: 0.9
+        spawn:
+          activate_contact_sensors: true
+          articulation_props:
+            articulation_enabled: null
+            enabled_self_collisions: false
+            fix_root_link: null
+            sleep_threshold: null
+            solver_position_iteration_count: 8
+            solver_velocity_iteration_count: 4
+            stabilization_threshold: null
+          collision_props: null
+          copy_from_source: true
+          deformable_props: null
+          fixed_tendons_props: null
+          func: omni.isaac.lab.sim.spawners.from_files.from_files.spawn_from_usd
+          joint_drive_props: null
+          mass_props: null
+          rigid_props:
+            angular_damping: 0.0
+            disable_gravity: false
+            enable_gyroscopic_forces: null
+            kinematic_enabled: null
+            linear_damping: 0.0
+            max_angular_velocity: 1000.0
+            max_contact_impulse: null
+            max_depenetration_velocity: 1.0
+            max_linear_velocity: 1000.0
+            retain_accelerations: false
+            rigid_body_enabled: null
+            sleep_threshold: null
+            solver_position_iteration_count: null
+            solver_velocity_iteration_count: null
+            stabilization_threshold: null
+          scale: null
+          semantic_tags: null
+          usd_path: http://omniverse-content-production.s3-us-west-2.amazonaws.com/Assets/Isaac/4.1/Isaac/IsaacLab/Robots/Unitree/G1/g1_minimal.usd
+          variants: null
+          visible: true
+          visual_material: null
+          visual_material_path: material
+      sky_light:
+        class_type: <dataclasses._MISSING_TYPE object at 0x000002AEF459EEF0>
+        collision_group: 0
+        debug_vis: false
+        init_state:
+          pos:
+          - 0.0
+          - 0.0
+          - 0.0
+          rot:
+          - 1.0
+          - 0.0
+          - 0.0
+          - 0.0
+        prim_path: /World/skyLight
+        spawn:
+          color:
+          - 1.0
+          - 1.0
+          - 1.0
+          color_temperature: 6500.0
+          copy_from_source: true
+          enable_color_temperature: false
+          exposure: 0.0
+          func: omni.isaac.lab.sim.spawners.lights.lights.spawn_light
+          intensity: 750.0
+          normalize: false
+          prim_type: DomeLight
+          semantic_tags: null
+          texture_file: http://omniverse-content-production.s3-us-west-2.amazonaws.com/Assets/Isaac/4.1/Isaac/Materials/Textures/Skies/PolyHaven/kloofendal_43d_clear_puresky_4k.hdr
+          texture_format: automatic
+          visible: true
+          visible_in_primary_ray: true
+      terrain:
+        class_type: omni.isaac.lab.terrains.terrain_importer.TerrainImporter
+        collision_group: -1
+        debug_vis: false
+        env_spacing: 2.5
+        max_init_terrain_level: 5
+        num_envs: 4096
+        physics_material:
+          compliant_contact_damping: 0.0
+          compliant_contact_stiffness: 0.0
+          dynamic_friction: 1.0
+          friction_combine_mode: multiply
+          func: omni.isaac.lab.sim.spawners.materials.physics_materials.spawn_rigid_body_material
+          improve_patch_friction: true
+          restitution: 0.0
+          restitution_combine_mode: multiply
+          static_friction: 1.0
+        prim_path: /World/ground
+        terrain_generator: null
+        terrain_type: plane
+        usd_path: null
+        visual_material:
+          albedo_brightness: null
+          func: omni.isaac.lab.sim.spawners.materials.visual_materials.spawn_from_mdl_file
+          mdl_path: http://omniverse-content-production.s3-us-west-2.amazonaws.com/Assets/Isaac/4.1/Isaac/IsaacLab/Materials/TilesMarbleSpiderWhiteBrickBondHoned/TilesMarbleSpiderWhiteBrickBondHoned.mdl
+          project_uvw: true
+          texture_scale:
+          - 0.25
+          - 0.25
+    sim:
+      device: cuda:0
+      disable_contact_processing: true
+      dt: 0.005
+      enable_scene_query_support: true
+      gravity:
+      - 0.0
+      - 0.0
+      - -9.81
+      physics_material:
+        compliant_contact_damping: 0.0
+        compliant_contact_stiffness: 0.0
+        dynamic_friction: 1.0
+        friction_combine_mode: multiply
+        func: omni.isaac.lab.sim.spawners.materials.physics_materials.spawn_rigid_body_material
+        improve_patch_friction: true
+        restitution: 0.0
+        restitution_combine_mode: multiply
+        static_friction: 1.0
+      physics_prim_path: /physicsScene
+      physx:
+        bounce_threshold_velocity: 0.5
+        enable_ccd: false
+        enable_enhanced_determinism: false
+        enable_stabilization: true
+        friction_correlation_distance: 0.025
+        friction_offset_threshold: 0.04
+        gpu_collision_stack_size: 67108864
+        gpu_found_lost_aggregate_pairs_capacity: 33554432
+        gpu_found_lost_pairs_capacity: 2097152
+        gpu_heap_capacity: 67108864
+        gpu_max_num_partitions: 8
+        gpu_max_particle_contacts: 1048576
+        gpu_max_rigid_contact_count: 8388608
+        gpu_max_rigid_patch_count: 163840
+        gpu_max_soft_body_contacts: 1048576
+        gpu_temp_buffer_capacity: 16777216
+        gpu_total_aggregate_pairs_capacity: 2097152
+        max_position_iteration_count: 255
+        max_velocity_iteration_count: 255
+        min_position_iteration_count: 1
+        min_velocity_iteration_count: 0
+        solver_type: 1
+      render_interval: 4
+      use_fabric: true
+    terminations:
+      base_contact:
+        func: omni.isaac.lab.envs.mdp.terminations.illegal_contact
+        params:
+          sensor_cfg:
+            body_ids:
+              slice_start: null
+              slice_step: null
+              slice_stop: null
+            body_names: torso_link
+            fixed_tendon_ids:
+              slice_start: null
+              slice_step: null
+              slice_stop: null
+            fixed_tendon_names: null
+            joint_ids:
+              slice_start: null
+              slice_step: null
+              slice_stop: null
+            joint_names: null
+            name: contact_forces
+            preserve_order: false
+          threshold: 1.0
+        time_out: false
+      time_out:
+        func: omni.isaac.lab.envs.mdp.terminations.time_out
+        params: {}
+        time_out: true
+    ui_window_class_type: omni.isaac.lab.envs.ui.manager_based_rl_env_window.ManagerBasedRLEnvWindow
+    viewer:
+      asset_name: null
+      cam_prim_path: /OmniverseKit_Persp
+      env_index: 0
+      eye:
+      - 7.5
+      - 7.5
+      - 7.5
+      lookat:
+      - 0.0
+      - 0.0
+      - 0.0
+      origin_type: world
+      resolution:
+      - 1280
+      - 720
+policy_cfg:
+  desc: null
+  value:
+    activation: elu
+    actor_hidden_dims:
+    - 256
+    - 128
+    - 128
+    critic_hidden_dims:
+    - 256
+    - 128
+    - 128
+    init_noise_std: 1.0
+runner_cfg:
+  desc: null
+  value:
+    algorithm:
+      clip_param: 0.2
+      desired_kl: 0.01
+      entropy_coef: 0.008
+      gamma: 0.99
+      lam: 0.95
+      learning_rate: 0.001
+      max_grad_norm: 1.0
+      num_learning_epochs: 5
+      num_mini_batches: 4
+      schedule: adaptive
+      use_clipped_value_loss: true
+      value_loss_coef: 1.0
+    device: cuda:0
+    empirical_normalization: false
+    experiment_name: g1_flat
+    load_checkpoint: model_.*.pt
+    load_run: .*
+    logger: wandb
+    max_iterations: 1500
+    neptune_project: isaaclab
+    num_steps_per_env: 24
+    policy:
+      activation: elu
+      actor_hidden_dims:
+      - 256
+      - 128
+      - 128
+      critic_hidden_dims:
+      - 256
+      - 128
+      - 128
+      init_noise_std: 1.0
+    resume: false
+    run_name: ''
+    save_interval: 50
+    seed: 42
+    wandb_project: isaaclab

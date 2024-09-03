@@ -1,0 +1,29 @@
+{
+    "os": "Windows-10-10.0.22631-SP0",
+    "python": "3.10.14",
+    "heartbeatAt": "2024-09-03T03:24:11.565927",
+    "startedAt": "2024-09-03T03:24:09.031910",
+    "docker": null,
+    "gpu": "NVIDIA GeForce RTX 3060 Ti",
+    "gpu_count": 1,
+    "cpu_count": 12,
+    "cuda": null,
+    "args": [
+        "--task",
+        "Isaac-Velocity-Flat-G1-v0",
+        "--logger",
+        "wandb"
+    ],
+    "state": "running",
+    "program": "C:\\Users\\steph\\code\\locomotion-dev\\scripts\\rsl_rl\\train.py",
+    "codePath": "scripts\\rsl_rl\\train.py",
+    "git": {
+        "remote": "git@github.com:StephenWelch/locomotion-dev.git",
+        "commit": "0f3dfe927461a6180ee49d2630e96fe519891ae6"
+    },
+    "email": "stephenwelch@vt.edu",
+    "root": "C:/Users/steph/code/locomotion-dev",
+    "host": "DESKTOP-4EUIE1Q",
+    "username": "stephenwelchva",
+    "executable": "C:\\Users\\steph\\miniconda3\\envs\\isaaclab\\python.exe"
+}
