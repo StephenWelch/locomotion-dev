@@ -29,6 +29,7 @@
 # docs and experiment results can be found at https://docs.cleanrl.dev/rl-algorithms/ppo/#ppo_continuous_action_isaacgympy
 import gymnasium as gym
 import os
+import sys
 import random
 import time
 from dataclasses import dataclass
@@ -181,9 +182,9 @@ class Agent(nn.Module):
             nn.Tanh(),
             layer_init(nn.Linear(256, 256)),
             nn.Tanh(),
-            layer_init(nn.Linear(256, envs.num_actions), std=0.01),
+            layer_init(nn.Linear(256, num_actions), std=0.01),
         )
-        self.actor_logstd = nn.Parameter(torch.zeros(1, envs.num_actions))
+        self.actor_logstd = nn.Parameter(torch.zeros(1, num_actions))
 
     def get_value(self, x):
         return self.critic(x)
@@ -203,57 +204,60 @@ class Agent(nn.Module):
             probs = Normal(action_mean, action_std)
         return action, probs.log_prob(action).sum(1), probs.entropy().sum(1), self.critic(x)
 
+parser = argparse.ArgumentParser(description="PPO Continuous Action IsaacLab")
+add_args(parser)
+AppLauncher.add_app_launcher_args(parser)
+args, hydra_args = parser.parse_known_args()
+# clear out sys.argv for Hydra
+sys.argv = [sys.argv[0]] + hydra_args
+args.batch_size = int(args.num_envs * args.num_steps)
+args.minibatch_size = int(args.batch_size // args.num_minibatches)
+args.num_iterations = args.total_timesteps // args.batch_size
+run_name = f"{args.env_id}__{args.exp_name}__{args.seed}__{int(time.time())}"
+if args.track:
+    import wandb
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="PPO Continuous Action IsaacLab")
-    add_args(parser)
-    AppLauncher.add_app_launcher_args(parser)
-    args = parser.parse_args()
-    args.batch_size = int(args.num_envs * args.num_steps)
-    args.minibatch_size = int(args.batch_size // args.num_minibatches)
-    args.num_iterations = args.total_timesteps // args.batch_size
-    run_name = f"{args.env_id}__{args.exp_name}__{args.seed}__{int(time.time())}"
-    if args.track:
-        import wandb
-
-        wandb.init(
-            project=args.wandb_project_name,
-            entity=args.wandb_entity,
-            sync_tensorboard=True,
-            config=vars(args),
-            name=run_name,
-            monitor_gym=True,
-            save_code=True,
-        )
-    writer = SummaryWriter(f"runs/{run_name}")
-    writer.add_text(
-        "hyperparameters",
-        "|param|value|\n|-|-|\n%s" % ("\n".join([f"|{key}|{value}|" for key, value in vars(args).items()])),
+    wandb.init(
+        project=args.wandb_project_name,
+        entity=args.wandb_entity,
+        sync_tensorboard=True,
+        config=vars(args),
+        name=run_name,
+        monitor_gym=True,
+        save_code=True,
     )
+writer = SummaryWriter(f"runs/{run_name}")
+writer.add_text(
+    "hyperparameters",
+    "|param|value|\n|-|-|\n%s" % ("\n".join([f"|{key}|{value}|" for key, value in vars(args).items()])),
+)
 
-    # TRY NOT TO MODIFY: seeding
-    random.seed(args.seed)
-    np.random.seed(args.seed)
-    torch.manual_seed(args.seed)
-    torch.backends.cudnn.deterministic = args.torch_deterministic
+# TRY NOT TO MODIFY: seeding
+random.seed(args.seed)
+np.random.seed(args.seed)
+torch.manual_seed(args.seed)
+torch.backends.cudnn.deterministic = args.torch_deterministic
 
-    device = torch.device("cuda" if torch.cuda.is_available() and args.cuda else "cpu")
+device = torch.device("cuda" if torch.cuda.is_available() and args.cuda else "cpu")
 
-    # env setup
-    app_launcher = AppLauncher(args)
-    simulation_app = app_launcher.app 
+# env setup
+app_launcher = AppLauncher(args)
+simulation_app = app_launcher.app 
 
-    from omni.isaac.lab.envs import ManagerBasedRLEnvCfg
-    from omni.isaac.lab.utils.dict import print_dict
-    from omni.isaac.lab.utils.io import dump_pickle, dump_yaml
-    from omni.isaac.lab_tasks.utils import get_checkpoint_path, parse_env_cfg
-    from omni.isaac.lab_tasks.utils.wrappers.rsl_rl import RslRlVecEnvWrapper
-    import locomotion_dev.tasks  # noqa: F401
-    from locomotion_dev.colored_noise import powerlaw_psd_gaussian
+# Imports must be done after the AppLauncher is created
+from omni.isaac.lab.envs import DirectRLEnvCfg, ManagerBasedRLEnvCfg
+from omni.isaac.lab.utils.dict import print_dict
+from omni.isaac.lab.utils.io import dump_pickle, dump_yaml
+from omni.isaac.lab_tasks.utils import get_checkpoint_path, parse_env_cfg
+from omni.isaac.lab_tasks.utils.wrappers.rsl_rl import RslRlOnPolicyRunnerCfg, RslRlVecEnvWrapper
+from omni.isaac.lab_tasks.utils.hydra import hydra_task_config
 
-    env_cfg = parse_env_cfg(
-        args.env_id, device=args.device, num_envs=args.num_envs, use_fabric=True
-    )
+import locomotion_dev.tasks  # noqa: F401
+from locomotion_dev.colored_noise import powerlaw_psd_gaussian
+
+@hydra_task_config(args.env_id, "rsl_rl_cfg_entry_point")
+def main(env_cfg: ManagerBasedRLEnvCfg | DirectRLEnvCfg, agent_cfg: RslRlOnPolicyRunnerCfg):
+    """Train with CleanRL agent."""
     envs = gym.make(args.env_id, cfg=env_cfg, render_mode="rgb_array" if args.capture_video else None)
 
     if args.capture_video:
@@ -433,3 +437,7 @@ if __name__ == "__main__":
 
     # envs.close()
     writer.close()
+
+if __name__ == '__main__':
+    main()
+    simulation_app.close()
