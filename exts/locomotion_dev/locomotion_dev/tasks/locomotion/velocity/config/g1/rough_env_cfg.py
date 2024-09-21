@@ -119,12 +119,25 @@ class TerminationsCfg:
 class G1RoughEnvCfg(LocomotionVelocityRoughEnvCfg):
     rewards: G1Rewards = G1Rewards()
     terminations: TerminationsCfg = TerminationsCfg()
+    gain_scale: float = 1.0
 
     def __post_init__(self):
         # post init of parent
         super().__post_init__()
         # Scene
         self.scene.robot = G1_MINIMAL_CFG.replace(prim_path="{ENV_REGEX_NS}/Robot")
+        for group_name, group in self.scene.robot.actuators.items():
+            if isinstance(group.stiffness, dict):
+                for actuator in group.stiffness.keys():
+                    group.stiffness[actuator] *= self.gain_scale
+            else:
+                group.stiffness *= self.gain_scale
+            if isinstance(group.damping, dict):
+                for actuator in group.damping.keys():
+                    group.damping[actuator] *= self.gain_scale
+            else:
+                group.damping *= self.gain_scale
+                
         self.scene.height_scanner.prim_path = "{ENV_REGEX_NS}/Robot/torso_link"
 
         # Randomization
