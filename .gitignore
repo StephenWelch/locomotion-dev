@@ -1,3 +1,9 @@
 **/__pycache__/
 *.egg-info
 logs/
+
+wandb/
+
+runs/
+
+outputs/
